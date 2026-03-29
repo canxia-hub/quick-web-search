@@ -1,9 +1,9 @@
 ---
-name: searxng-web-search
+name: quick-web-search
 description: Search the web through a self-hosted SearXNG instance with a lightweight but quality-aware pipeline. Use when the user needs a quick web lookup, current information, recent news, or broad internet context without a full research report. Prefer this skill for fast search-and-scan tasks; use a heavier research workflow only when the task needs planning, multi-source synthesis, citations, or a structured report.
 ---
 
-# SearXNG Web Search
+# Quick Web Search
 
 Use this skill as a **quality-aware quick-search layer** over SearXNG.
 

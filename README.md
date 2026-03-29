@@ -1,4 +1,4 @@
-# searxng-web-search
+# quick-web-search
 
 A lightweight OpenClaw skill for fast web search through a self-hosted SearXNG instance, with focused query understanding, normalized result shaping, and local quality-based reranking.
 

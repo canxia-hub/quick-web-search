@@ -1,10 +1,10 @@
-# Public Release Audit — searxng-web-search
+# Public Release Audit — quick-web-search
 
 Date: 2026-03-30
 
 ## Release scope
 
-This repository publishes a cleaned public version of the `searxng-web-search` skill.
+This repository publishes a cleaned public version of the `quick-web-search` skill.
 
 Included:
 - `SKILL.md`
