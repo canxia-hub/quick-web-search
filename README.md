@@ -1,6 +1,6 @@
 # searxng-web-search
 
-A lightweight OpenClaw skill for fast web search through a self-hosted SearXNG instance, aligned with the same query-understanding and local ranking style used by `deep-search-research`.
+A lightweight OpenClaw skill for fast web search through a self-hosted SearXNG instance, with focused query understanding, normalized result shaping, and local quality-based reranking.
 
 ## Positioning
 
@@ -10,7 +10,7 @@ Use this project for **quick search-and-scan tasks**:
 - broad internet context gathering
 - fast shortlist generation
 
-Use `deep-search-research` instead when a task needs:
+Use a heavier research workflow instead when a task needs:
 - an explicit research plan
 - multi-source synthesis
 - citations and evidence tracking
@@ -18,12 +18,12 @@ Use `deep-search-research` instead when a task needs:
 
 ## What changed
 
-This public version keeps SearXNG as the retrieval backend, but aligns the search stack with `deep-search-research` by reusing the same style of:
+This public version keeps SearXNG as the retrieval backend, while strengthening the search stack with:
 - query understanding
 - result normalization
 - local quality-layer reranking
 
-That makes quick search and deep research feel like two depths of one system instead of two unrelated systems.
+That makes quick search feel more stable, selective, and consistent than raw metasearch output alone.
 
 ## Repository layout
 

@@ -1,22 +1,22 @@
 ---
 name: searxng-web-search
-description: Search the web through a self-hosted SearXNG instance with a lightweight pipeline aligned to deep-search-research. Use when the user needs a quick web lookup, current information, recent news, or broad internet context without a full research report. Prefer this skill for fast search-and-scan tasks; prefer deep-search-research when the task needs a plan, multi-source synthesis, citations, or a structured research deliverable.
+description: Search the web through a self-hosted SearXNG instance with a lightweight but quality-aware pipeline. Use when the user needs a quick web lookup, current information, recent news, or broad internet context without a full research report. Prefer this skill for fast search-and-scan tasks; use a heavier research workflow only when the task needs planning, multi-source synthesis, citations, or a structured report.
 ---
 
 # SearXNG Web Search
 
-Use this skill as the **quick-search companion** to `deep-search-research`.
+Use this skill as a **quality-aware quick-search layer** over SearXNG.
 
-It keeps the retrieval path lightweight, but aligns with the deep-search stack in three ways:
+It keeps the retrieval path lightweight while improving output quality in three ways:
 - normalize results into a stable document shape
-- expand or compress queries with the same query-understanding logic
-- re-rank results with the same local quality-layer style instead of trusting raw engine order
+- expand or compress queries with focused query-understanding logic
+- re-rank results with a local quality-layer instead of trusting raw engine order
 
 ## Use this workflow
 
 1. Use `scripts/searxng_search.py` for quick web lookups.
 2. Keep the task lightweight: find, scan, shortlist, or gather current context.
-3. If the user needs a report, research plan, claim tracing, or multi-platform synthesis, switch to `deep-search-research`.
+3. If the user needs a report, research plan, claim tracing, or multi-platform synthesis, switch to a heavier research workflow.
 
 ## Command patterns
 
@@ -81,5 +81,5 @@ Each result includes:
 ## Notes
 
 - Auto-start is supported for the local SearXNG deployment.
-- The quick-search path intentionally stays cheaper and shallower than `deep-search-research`.
-- This skill is meant to reduce search-system drift: quick lookup and deep research should feel like two depths of the same stack, not two unrelated systems.
+- The quick-search path intentionally stays cheaper and shallower than a full research workflow.
+- This skill is meant to keep fast lookup behavior stable and quality-aware without turning every search into a large research task.
