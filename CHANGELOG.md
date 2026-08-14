@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 - 2026-08-14
+
+### Added
+- `scripts/rss_fetch.py` for RSS/Atom fetching, subscriptions, incremental monitoring, and feed health checks
+- `scripts/weixin_search.py` for optional WeChat article/account discovery through Sogou Weixin
+- Requests fallback mode for WeChat retrieval when Scrapling is unavailable or intentionally bypassed
+
+### Documentation
+- Updated README requirements, quick-start commands, repository layout, and external-service limitations
+- Updated the public-release audit to include both new entrypoints and their runtime verification evidence
+
 ## 1.1.0 - 2026-04-20
 
 ### Added
