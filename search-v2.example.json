@@ -1,0 +1,16 @@
+{
+  "searxng_url": "http://127.0.0.1:8888",
+  "cdp_url": "http://127.0.0.1:18800",
+  "browser": true,
+  "workers": 2,
+  "cache_ttl": 900,
+  "cache_entries": 64,
+  "search_job_budget": 18,
+  "read_job_budget": 24,
+  "official_domains": [],
+  "web_providers": [
+    "searxng",
+    "bing",
+    "google"
+  ]
+}

@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 - 2026-10-04
+
+### Added
+- Unified search/read/research/auto/batch/health CLI and shared lightweight core.
+- Conditional WeChat/Bilibili/Xiaohongshu/GitHub adapters; body/PDF/subtitle evidence.
+- Query variants, stable-ID deduplication, bounded work, cancellation and resumable material packages.
+- RSS/WeChat compatibility scripts and portable installation/configuration instructions.
+
+### Fixed
+- WeChat normal-click title matching and visible-body readiness.
+- Bilibili exact-part CID/login status and character-budgeted complete subtitle evidence.
+- Short Xiaohongshu video descriptions remain metadata, not transcripts.
+
+### Boundaries
+- Lexical ranking by default; no newly required model/search service or paid API.
+- Real representative samples passed; platform limits and coverage gaps remain explicit.
+- Existing legacy files remain available.
+
 ## 1.2.0 - 2026-08-14
 
 ### Added
