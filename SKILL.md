@@ -1,263 +1,68 @@
 ---
 name: quick-web-search
-description: >
-  Search the web through a self-hosted SearXNG instance with a lightweight but
-  quality-aware pipeline. Also includes an RSS/Atom Feed sub-command (rss_fetch.py)
-  for subscribing, fetching, and monitoring blog/news feeds — zero API fees.
-  Use when you need a quick web lookup, current information, recent news, or broad
-  internet context. Also use when tracking blog updates, ArXiv papers, or GitHub
-  Releases via RSS feeds.
+description: Use for web lookups, recent news, official/technical docs, GitHub discovery, Chinese WeChat/Bilibili/Xiaohongshu searches, page reading, or RSS tracking. Automatically route natural-language requests to fast search/read or deep-search-research.
 ---
-
-# Quick Web Search
-
-Use this skill as the **quick-search + feed reader** companion to `deep-search-research`.
-
-It keeps the retrieval path lightweight, covering two complementary modes:
-- **Search** (reactive) — use `searxng_search.py` to look up anything on the web
-- **RSS Feed** (proactive) — use `rss_fetch.py` to subscribe to and monitor blog/news feeds
-
-## Search workflow
-
-1. Use `scripts/searxng_search.py` for quick web lookups.
-2. Keep the task lightweight: find, scan, shortlist, or gather current context.
-3. If the user needs a report, research plan, claim tracing, or multi-platform synthesis, switch to `deep-search-research`.
-
-### Search command patterns
-
-Basic search:
-```bash
-py scripts/searxng_search.py "your query"
-```
-
-Tech or news search:
-```bash
-py scripts/searxng_search.py "latest browser automation agent news" --categories news --time-range day --max-results 5
-py scripts/searxng_search.py "open source coding assistant" --categories it --max-results 8
-```
-
-Human-readable output:
-```bash
-py scripts/searxng_search.py "OpenClaw" --text
-```
-
-Health check:
-```bash
-py scripts/searxng_search.py --health
-```
-
-### Search output contract
-
-The script returns JSON with:
-- `query`, `results`, `suggestions`, `answers`, `total_results`, `error`, `meta`
-
-Each result includes: title, url, snippet, engines, score, category, source_type, query_variant, quality.
-
----
-
-## RSS Feed workflow
-
-Use `scripts/rss_fetch.py` for feed-based information retrieval.
-Complements search: search finds what you ask for; feeds push what you subscribe to.
-
-### Prerequisites
-
-```bash
-pip install feedparser
-```
-
-### RSS commands
-
-**Fetch** latest entries from a Feed URL:
-```bash
-py scripts/rss_fetch.py fetch "https://hnrss.org/newest" --limit 10
-py scripts/rss_fetch.py fetch "https://www.ruanyifeng.com/blog/atom.xml" --limit 3
-py scripts/rss_fetch.py fetch "https://hnrss.org/newest" --since "2026-04-01"
-```
-
-**Subscribe** to feeds:
-```bash
-py scripts/rss_fetch.py add "阮一峰" --url "https://www.ruanyifeng.com/blog/atom.xml"
-py scripts/rss_fetch.py add "Hacker News" --url "https://hnrss.org/newest"
-```
-
-**List** subscriptions:
-```bash
-py scripts/rss_fetch.py list
-```
-
-**Monitor** for new entries (incremental — only outputs entries since last check):
-```bash
-py scripts/rss_fetch.py monitor
-```
-
-**Health check** a feed:
-```bash
-py scripts/rss_fetch.py health "https://hnrss.org/newest"
-```
-
-### RSS command patterns
-
-| Action | Example |
-|--------|---------|
-| **fetch** | `fetch <url> [--limit N] [--since "YYYY-MM-DD"]` |
-| **add** | `add [name] --url <feed-url>` |
-| **remove** | `remove <url-or-name>` |
-| **list** | `list [--feeds-file PATH]` |
-| **monitor** | `monitor [--feeds-file PATH] [--url URL] [--limit N]` |
-| **health** | `health <url>` |
-
-### Common Feed sources
-
-| Source | URL |
-|--------|-----|
-| Hacker News | `https://hnrss.org/newest` |
-| 阮一峰网络日志 | `https://www.ruanyifeng.com/blog/atom.xml` |
-| 36Kr | `https://36kr.com/feed` |
-| ArXiv CS.AI | `https://export.arxiv.org/api/query?search_query=cat:cs.AI&sortBy=submittedDate&max_results=10` |
-| GitHub Releases | `https://github.com/<owner>/<repo>/releases.atom` |
-
-### Cron integration
-
-Pair with `cron-manager` for scheduled feed monitoring:
-```
-定时任务：使用 rss_fetch.py monitor 检查所有已订阅源的新文章，
-如果有新文章，以简洁格式列出标题和链接。
-如果没有新文章，不输出任何内容。
-```
-
----
-
-## Guardrails
-
-- Treat search as **fast search**, not deep research.
-- Prefer the original query plus one focused variant; do not turn quick search into a large retrieval job.
-- Preserve error transparency. If SearXNG is unreachable or rate-limited, surface it clearly.
-- RSS is best for structured, syndicated content (blogs, news, ArXiv, releases).
-- For platform-specific data (B站/小红书/Twitter), use `opencli-bridge`.
-- For scraping arbitrary web pages, use `scrapling-plus`.
-
-## Notes
-
-- Auto-start is supported for the local SearXNG deployment.
-- The quick-search path intentionally stays cheaper and shallower than `deep-search-research`.
-- RSS subscriptions are stored at `~/.openclaw/rss-subscribe/feeds.json` (independent of workspace).
-- RSS requires `feedparser` Python package (`pip install feedparser`).
-
----
-
-## 搜索规范（建议采用）
-
-以下规范用于提升搜索结果的可信度和可追溯性，作为**建议性内容**，可根据任务复杂度选择采用。
-
-### 证据链规范
-
-#### 来源分级
-
-| 级别 | 类型 | 示例 | 可信度 |
-|------|------|------|--------|
-| 1 | 官方/原始 | 官方公告、法规原文、论文原文、招股书 | 最高 |
-| 2 | 权威机构 | 研究机构、专业出版社、监管机构 | 高 |
-| 3 | 主流媒体 | 高质量新闻媒体、专业数据库 | 中高 |
-| 4 | 二手来源 | 转引、摘要、博客 | 中 |
-| 5 | 社交/论坛 | Twitter、Reddit、论坛帖子 | 低（仅作线索） |
-
-#### 证据链要求
-
-| 风险等级 | 来源要求 |
-|----------|----------|
-| 低风险（普通事实） | ≥1 个高可信来源 |
-| 中风险（重要结论） | ≥2 个独立来源，其中 1 个为官方/原始 |
-| 高风险（决策依据） | ≥2-3 个来源，必须含原始来源 |
-
-#### 社交平台使用规则
-
-- ✅ 可作为线索发现来源
-- ❌ 不能单独作为结论依据
-- ⚠️ 必须回查到官网、媒体或原始文件
-
-### 来源优先级
-
-按以下顺序优先选择来源：
-
-1. **官方文档、法规、标准、公告、论文原文**
-2. 权威机构、专业出版社、系统综述
-3. 高质量新闻媒体与专业数据库
-4. 一般二手来源
-5. 社交平台、论坛、聚合站（仅作线索）
-
-**优先原始来源。若来源冲突，指出冲突点、时间、可信度差异。**
-
-### 时效性判定规则
-
-凡是**有超过 10% 概率已变化**的信息，先联网核验：
-
-- 新闻、价格、规则、政策
-- 产品规格、版本、优惠
-- 人物职位、比赛结果
-- 门店、餐馆、旅行信息
-
-### 输出格式建议
-
-#### 标准输出结构
-
-1. **结论摘要** — 一句话回答核心问题
-2. **关键依据与来源** — 列出支撑结论的证据
-3. **逻辑说明** — 简要说明推理过程（可选）
-4. **不确定点与边界** — 明确说明不确定的部分
-5. **可执行建议** — 下一步行动建议（可选）
-
-#### 引用规则
-
-- 每个关键事实后跟引用
-- 不要把所有引用堆在结尾
-- 未核验的线索不得伪装成事实
-
-#### 不确定性披露场景
-
-必须显式披露不确定的场景：
-
-- 来源冲突
-- 仅有单一非官方来源
-- 页面不可访问/抽取失败
-- 最新信息可能尚未公开
-- 结论依赖推断
-
-### 查询改写模板
-
-每次搜索前，可将原问题改写为多条候选查询：
-
-| 查询类型 | 示例 |
-|----------|------|
-| 精确查询 | `current CEO of [company]` |
-| 召回查询 | `[company] CEO` |
-| 官方查询 | `site:[official domain] [company] leadership` |
-| 时效查询 | `[topic] 2026 update` |
-| 交叉查询 | `[topic] announcement site:[official domain]` |
-
-### 质量自检清单
-
-#### 搜索前
-- [ ] 问题是否需要最新信息？
-- [ ] 搜索关键词是否准确？
-
-#### 搜索后
-- [ ] 关键结论是否有来源支撑？
-- [ ] 来源是否足够可信？
-- [ ] 是否有更新的来源？
-
-#### 输出前
-- [ ] 事实/推断/建议是否分开？
-- [ ] 不确定点是否已说明？
-- [ ] 输出格式是否清晰？
-
----
-
-## 与其他技能的协作
-
-| 场景 | 推荐技能 |
-|------|----------|
-| 深度研究、多平台综合 | `deep-search-research` |
-| 复杂页面、JS-heavy、登录态 | `agent-browser` |
-| 难抓取网页、反爬绕过 | `scrapling-plus` |
-| 社交平台数据（B站/小红书/Twitter） | `opencli-bridge` |
+# Unified Search v2 — 快查 / 阅读 / RSS
+
+路径示例中的<OpenClaw目录>由Agent替换为当前用户实际绝对路径；以本技能所在目录定位脚本，不要求固定账号或系统目录。
+用户只需自然语言提需求；由 Agent 选路、执行、读证据、回答。CLI 是内部入口，不要求用户写参数。
+
+## 主入口与依赖
+- 统一入口：本技能 scripts/search.py；与 deep-search-research 共享 scripts/search_core。
+- Windows 安装路径：<OpenClaw目录>\skills\quick-web-search\scripts\search.py。
+- 已有 Python 3.11 + requests + beautifulsoup4 足够主链；PDF可选pypdf。无需新增付费API、向量服务、浏览器池或WebUI。
+- 不默认安装/升级第三方组件，不启动/重启网关；现有浏览器后备只复用明确配置的loopback CDP（默认18800）。
+- 脚本不读取/转存cookies，不终止共享浏览器，不依赖OpenCLI扩展；OpenCLI可用时仍可通过opencli-bridge作专业后备。
+
+## Agent 自动执行流程
+1. 判断意图：URL阅读→read；明确报告/比较/深入研究→deep-search-research；其余→search。程序auto只是保守兜底，Agent判断优先。
+2. 准备查询：保留实体/约束/时间。技术主题补英语变体；主题过宽则做一个聚焦变体，不把中文主题削成AI或强制套GitHub变体。来源默认自动；中文视频流程覆盖wechat,bilibili,xiaohongshu,web。
+3. 先执行统一入口；快查默认工作预算30秒，返回已有部分结果。不将目标时延说成已保证的SLA。
+4. 需要JS或登录态且返回browser_required：使用OpenClaw内置browser profiles/status，选择已授权且可用profile，再start；按browser-automation技能操作。不凭历史记忆假设登录。CDP不是18800时通过SEARCH_CDP_URL或配置文件指定实际loopback地址。
+5. 源错误不是零结果：检查traces、coverage、status。login_required/captcha明确说明；必要的人工决策用OpenClaw ask_user，一次一问、推荐项首列。不绕过验证，也不因后备有索引摘要就宣称原生搜索/全文通过。
+6. 挑选相关原文，调用read；搜狗/link提供搜索结果的原始标题作为read --title，由程序在自有临时搜索页唯一匹配并正常点击，research自动传递标题；若匹配不唯一/标题已变，返回article_match_unavailable，不任取其他文章，也不生成跳转签名。读完才形成需要正文支撑的事实。返回body/page_text/pdf_text/transcript/metadata/none各有边界。标题/简介≠字幕，摘要≠全文，网页正文选择器≠全文完整性证明。
+7. 回复用中文、逐关键声明挂原始URL，并区分事实/推断/缺口。creator_content可以支撑创作者自身教程内容，不把所有社交内容机械降级为无效；不把任意域名、GitHub仓或developer子域直接当官方。
+
+## 调用例
+所有本机命令使用Windows绝对路径；复杂shell按powershell技能落成.ps1。
+~~~powershell
+py "<OpenClaw目录>\skills\quick-web-search\scripts\search.py" auto "AI 视频制作 工作流 教程"
+py "<OpenClaw目录>\skills\quick-web-search\scripts\search.py" search "ComfyUI video workflow" --sources web,github --queries "ComfyUI video tutorial official"
+py "<OpenClaw目录>\skills\quick-web-search\scripts\search.py" read "https://docs.searxng.org/admin/installation.html"
+py "<OpenClaw目录>\skills\quick-web-search\scripts\search.py" research "对比AI视频制作工作流" --output "<OpenClaw目录>\workspace\outputs\search-research"
+py "<OpenClaw目录>\skills\quick-web-search\scripts\search.py" health
+~~~
+全局选项（action前）：--page 1-10提供分页；小红书原生需滚动、不支持页码，明确降级为公开索引或返回unsupported_pagination。--category news / --time-range day|week|month|year / --language按来源过滤。
+其它选项：--fresh跳过结果缓存；--sites严格主机过滤；--budget覆盖预算；--limit输出条数；--queries Agent拟定的变体；--no-browser只用HTTP；--cancel-file指定取消标记；batch接UTF-8 JSON查询数组；research支持--resume checkpoint.json，问题必须相同。
+
+## 结果/证据契约
+- schema_version=2.0；status=ok/partial/empty/blocked/cancelled/error；results、coverage、traces、queries、seconds、budget_seconds。
+- 结果title/url/canonical_url/platform/provider/query/provenance/relevance/source_type/fetched_at/content_level。实际使用的来源与查询可追踪。
+- 排序为词法+意图+覆盖多样性，不声称真实embedding；追踪URL去重、搜狗同标题作者归并、每平台保留相关代表。
+- read含text/evidence/locator/hash、作者/时间（获取到才有）、内容类型和warnings。证据段落是抽取内容，不是事实判断。
+- report.json/checkpoint.json/report.md是可恢复的材料包，Agent须自行回查冲突、证据缺口与逐声明引用；不把模板报告冒称LLM已完成研究。
+- 结果缓存默认900秒/64条，可调；只缓存无警告成功搜索摘要，不缓存读取的登录正文。新闻/价格/版本等时效查询使用--fresh。--output明确保存材料，不写凭据。
+
+## 来源和降级
+- web：配置的SearXNG→公开HTTP→现有浏览器Google；过滤不相关与site不匹配结果。
+- wechat：搜狗公开文章发现；提供发现标题时用自有临时搜索页正常点击到mp原文，保留正文/公众号名/解析到的发布时间。公开文章样本不需要微信登录；短帖/媒体页只读文字时标为metadata/post_text_only，不冒充媒体正文或视频转写。同一共享profile的搜狗跳转串行处理，避免同时创建多个跳转流程；遇验证码/删除/环境限制如实降级，不保证全文获取率。
+- bilibili：公开API→浏览器视频卡片；阅读优先正常页面嵌入的视频元信息，view API受限不阻断player字幕接口。按实际p选择cid，不用第一集替代。接口need_login_subtitle=true明确标记login_required；字幕仅返回实际可读轨道与时间码，否则metadata，并区分未登录/无可访问轨道/接口或字幕文件失败。登录并不保证该集有字幕；没有字幕不做无授权付费ASR。
+- xiaohongshu：需要现有登录态的原生搜索；缺登录尝试公开索引发现，discovery_only=true仍需原文验证。
+- github：公开API→已配置gh认证，认证信息不进日志/证据。
+- 源状态可能随时间、登录和限流变化；当前验证证据见重制任务验收报告，不作永久可用承诺。
+
+## 配置
+可选<OpenClaw目录>\search-v2.json；不含必要密钥。
+字段：searxng_url、cdp_url、browser、workers(1-3)、language、categories、official_domains(用户/Agent已核实的官方域)、cache_ttl、cache_entries、search_job_budget、read_job_budget、web_providers。
+明确官方域仍只是来源身份提示，不保证内容真实。
+缺后端照常走已配置后备；health是诊断，不等同真实搜索成功。
+
+## 保留旧能力
+旧searxng_search.py、weixin_search.py仍保留为兼容入口，新任务优先search.py。
+RSS独立能力保留，订阅文件不迁移、不覆盖：
+~~~powershell
+py "<OpenClaw目录>\skills\quick-web-search\scripts\rss_fetch.py" fetch "https://hnrss.org/newest" --limit 5
+py "<OpenClaw目录>\skills\quick-web-search\scripts\rss_fetch.py" list
+py "<OpenClaw目录>\skills\quick-web-search\scripts\rss_fetch.py" monitor
+~~~
+add/remove修改订阅仅按用户要求；monitor可能更新检查时间，别当只读。常驻监控仍由既有RSS/自动化流程负责，不因本次重制创建新定时任务。
